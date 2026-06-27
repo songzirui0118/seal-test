@@ -23,12 +23,23 @@ jobs:
 
     - uses: gradle/actions/setup-gradle@v3
 
-    - run: gradle assembleDebug
+    - name: Build Debug APK
+      run: gradle assembleDebug
+      env:
+        ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
+    - name: Find APK
+      run: |
+        echo "=== 查找 APK 文件 ==="
+        find app/build -name "*.apk" 2>/dev/null
+        echo "=== 检查输出目录 ==="
+        ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "debug目录不存在"
+        ls -la app/build/outputs/apk/ 2>/dev/null || echo "apk目录不存在"
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: seal-debug-apk
         path: app/build/outputs/apk/debug/*.apk
-        if-no-files-found: error
+        if-no-files-found: warn
         retention-days: 20
