@@ -1,0 +1,6 @@
+[
+  {
+    "type": "text",
+    "text": "name: Build Debug APK\n\non:\n  workflow_dispatch:\n\njobs:\n\n  build:\n    runs-on: ubuntu-latest\n\n    steps:\n    - uses: actions/checkout@v4\n\n    - name: set up JDK 21\n      uses: actions/setup-java@v4\n      with:\n        java-version: '21'\n        distribution: 'temurin'\n        cache: 'gradle'\n\n    - name: Setup Android SDK\n      uses: android-actions/setup-android@v3\n\n    - uses: gradle/actions/setup-gradle@v3\n\n    - run: gradle assembleDebug\n\n    - name: Upload Debug APK\n      uses: actions/upload-artifact@v4\n      with:\n        name: seal-debug-apk\n        path: app/build/outputs/apk/debug/*.apk\n        if-no-files-found: error\n        retention-days: 20\n"
+  }
+]
